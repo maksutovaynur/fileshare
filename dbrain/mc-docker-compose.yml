@@ -1,0 +1,110 @@
+version: "3"
+
+services:
+
+  queue:
+    image: rabbitmq:3.7-management-alpine
+    restart: always
+    logging: &short_logging
+      driver: "json-file"
+      options:
+        max-file: "10"
+        max-size: "100m"
+    
+  redis:
+    image: redis:6-alpine
+    restart: always
+    logging: *short_logging
+
+  mongo:
+    image: mongo:3.6-stretch
+    restart: always
+    logging:
+      driver: none
+
+  worker: &service
+    image: dbrainbinaries/docr:v3.5.5
+    restart: always
+    env_file: &env .env
+    command: worker
+    logging: *short_logging
+    
+  front:
+    image: dbrainbinaries/docr-demo-nginx:1.2.3
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/nginx.conf
+    env_file: *env
+    ports:
+      - ${API_PORT:-8080}:80
+
+  api:
+    <<: *service
+    command: api
+    logging: *short_logging
+
+  classifier:
+    <<: *service
+    command: classifier
+    logging: *short_logging
+#    environment:
+#      CUDA_VISIBLE_DEVICES: 0
+
+#  classifier_2:
+#    <<: *service
+#    command: classifier
+#    environment:
+#      CUDA_VISIBLE_DEVICES: 1
+
+  multidocnet:
+    <<: *service
+    command: multidocnet
+    logging: *short_logging
+#    environment:
+#      CUDA_VISIBLE_DEVICES: 0
+
+  heuristics:
+    <<: *service
+    command: heuristics
+    logging: *short_logging
+
+  wordnet:
+    <<: *service
+    command: wordnet
+    logging: *short_logging
+#    environment:
+#      CUDA_VISIBLE_DEVICES: 0
+
+  ocr:
+    <<: *service
+    command: ocr
+    logging: *short_logging
+#    environment:
+#      CUDA_VISIBLE_DEVICES: 0
+
+  fieldnet:
+    <<: *service
+    command: fieldnet
+    logging: *short_logging
+#    environment:
+#      CUDA_VISIBLE_DEVICES: 0
+
+  fulltext:
+    <<: *service
+    command: fulltext
+    logging: *short_logging
+#    environment:
+#      CUDA_VISIBLE_DEVICES: 0
+
+  face:
+    <<: *service
+    command: face
+    logging: *short_logging
+#    environment:
+#      CUDA_VISIBLE_DEVICES: 0
+
+  checkbox_segm:
+    <<: *service
+    command: checkbox_segm
+    logging: *short_logging
+#    environment:
+#      CUDA_VISIBLE_DEVICES: 0
