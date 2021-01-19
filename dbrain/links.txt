@@ -1,2 +1,3 @@
 https://ru.download.nvidia.com/XFree86/Linux-x86_64/460.32.03/NVIDIA-Linux-x86_64-460.32.03.run
+https://download.docker.com/linux/ubuntu/dists/bionic/pool/stable/amd64/docker-ce_20.10.2~3-0~ubuntu-bionic_amd64.deb
 
